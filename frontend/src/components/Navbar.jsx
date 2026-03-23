@@ -22,6 +22,7 @@ export default function Navbar() {
         { path: '/dashboard', label: 'Dashboard' },
         { path: '/roadmap', label: 'Roadmap' },
         { path: '/coach', label: 'Coach' },
+        { path: '/linkedin', label: 'LinkedIn' },
         { path: '/questions', label: 'Questions' },
         { path: '/resume', label: 'Resume' },
         { path: '/progress', label: 'Progress' },

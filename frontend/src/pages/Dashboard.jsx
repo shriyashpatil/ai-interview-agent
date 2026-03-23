@@ -12,6 +12,7 @@ import {
   Target,
   TrendingUp,
   CheckCircle,
+  Linkedin,
 } from 'lucide-react';
 import { interviewAPI, roadmapAPI, profileAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -257,6 +258,20 @@ export default function Dashboard() {
             </p>
             <div className="flex items-center text-blue-600 text-sm font-semibold">
               Chat <ArrowRight size={16} className="ml-2" />
+            </div>
+          </Link>
+
+          <Link
+            to="/linkedin"
+            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left group"
+          >
+            <Linkedin className="text-blue-700 mb-4 group-hover:scale-110 transition-transform" size={32} />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">LinkedIn Agent</h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Optimise profile, cold message recruiters, track applications.
+            </p>
+            <div className="flex items-center text-blue-600 text-sm font-semibold">
+              Open <ArrowRight size={16} className="ml-2" />
             </div>
           </Link>
         </div>

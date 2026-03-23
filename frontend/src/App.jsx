@@ -14,6 +14,7 @@ import Progress from './pages/Progress';
 import Onboarding from './pages/Onboarding';
 import Roadmap from './pages/Roadmap';
 import Coach from './pages/Coach';
+import LinkedIn from './pages/LinkedIn';
 
 function App() {
   return (
@@ -86,6 +87,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Coach />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/linkedin"
+              element={
+                <ProtectedRoute>
+                  <LinkedIn />
                 </ProtectedRoute>
               }
             />
