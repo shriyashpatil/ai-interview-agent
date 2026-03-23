@@ -53,15 +53,6 @@ public class LinkedInService {
     private String buildProfileOptimizationPrompt(User user, ProfileOptimizeRequest request) {
         StringBuilder sb = new StringBuilder();
 
-        // Inject user career context if available
-        String careerContext = "";
-        userProfileRepository.findByUserId(user.getId()).ifPresent(up ->
-            careerContext.concat(String.format(
-                "User's career goal: %s | Domain: %s | YoE: %d years | Target CTC: %s",
-                up.getGoal(), up.getDomain(), up.getYearsOfExperience(),
-                up.getExpectedCTC() != null ? up.getExpectedCTC() : "not specified"))
-        );
-
         sb.append("""
                 You are a world-class LinkedIn profile optimizer. Your job is to transform \
                 a user's LinkedIn profile into one that gets recruiter attention and lands interviews.
@@ -77,9 +68,17 @@ public class LinkedInService {
         if (request.getTargetCompany() != null) {
             sb.append("Target Company: ").append(request.getTargetCompany()).append("\n");
         }
-        if (!careerContext.isEmpty()) {
-            sb.append("Career Context: ").append(careerContext).append("\n");
-        }
+
+        // Inject user career context if available
+        userProfileRepository.findByUserId(user.getId()).ifPresent(up -> {
+            sb.append("Career Context: User's goal: ").append(up.getGoal())
+              .append(" | Domain: ").append(up.getDomain())
+              .append(" | YoE: ").append(up.getYearsOfExperience()).append(" years");
+            if (up.getExpectedCTC() != null) {
+                sb.append(" | Target CTC: ").append(up.getExpectedCTC());
+            }
+            sb.append("\n");
+        });
 
         sb.append("""
 

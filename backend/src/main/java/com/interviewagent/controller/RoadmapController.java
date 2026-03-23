@@ -125,8 +125,7 @@ public class RoadmapController {
             return ResponseEntity.status(403).body(Map.of("error", "Forbidden"));
         }
 
-        RoadmapMilestone.MilestoneStatus newStatus =
-                RoadmapMilestone.MilestoneStatus.valueOf(request.getStatus().toUpperCase());
+        RoadmapMilestone.MilestoneStatus newStatus = request.getStatus();
         milestone.setStatus(newStatus);
 
         if (newStatus == RoadmapMilestone.MilestoneStatus.COMPLETED) {
