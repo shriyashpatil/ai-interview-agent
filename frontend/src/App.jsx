@@ -11,6 +11,9 @@ import Interview from './pages/Interview';
 import Questions from './pages/Questions';
 import Resume from './pages/Resume';
 import Progress from './pages/Progress';
+import Onboarding from './pages/Onboarding';
+import Roadmap from './pages/Roadmap';
+import Coach from './pages/Coach';
 
 function App() {
   return (
@@ -59,6 +62,30 @@ function App() {
               element={
                 <ProtectedRoute>
                   <Progress />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/onboarding"
+              element={
+                <ProtectedRoute>
+                  <Onboarding />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/roadmap"
+              element={
+                <ProtectedRoute>
+                  <Roadmap />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/coach"
+              element={
+                <ProtectedRoute>
+                  <Coach />
                 </ProtectedRoute>
               }
             />

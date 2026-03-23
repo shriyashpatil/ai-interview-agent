@@ -88,4 +88,30 @@ export const progressAPI = {
     apiClient.get('/progress'),
 };
 
+// Profile endpoints
+export const profileAPI = {
+  get: () =>
+    apiClient.get('/profile'),
+  save: (data) =>
+    apiClient.post('/profile', data),
+};
+
+// Roadmap endpoints
+export const roadmapAPI = {
+  generate: () =>
+    apiClient.post('/roadmap/generate'),
+  getActive: () =>
+    apiClient.get('/roadmap/active'),
+  getAll: () =>
+    apiClient.get('/roadmap'),
+  updateMilestone: (milestoneId, status) =>
+    apiClient.patch(`/roadmap/milestones/${milestoneId}`, { status }),
+};
+
+// Coach endpoints
+export const coachAPI = {
+  chat: (message) =>
+    apiClient.post('/coach/chat', { message }),
+};
+
 export default apiClient;

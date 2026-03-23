@@ -88,6 +88,19 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- Twilio for WhatsApp reminders -->
+        <dependency>
+            <groupId>com.twilio.sdk</groupId>
+            <artifactId>twilio</artifactId>
+            <version>10.1.0</version>
+        </dependency>
+
+        <!-- Jackson for JSON roadmap parsing -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
         <!-- File parsing (resume analysis) -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>

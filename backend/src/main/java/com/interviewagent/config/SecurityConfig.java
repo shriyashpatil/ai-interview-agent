@@ -36,6 +36,9 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/api/questions/public/**").permitAll()
                         .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        .requestMatchers("/api/profile/**").authenticated()
+                        .requestMatchers("/api/roadmap/**").authenticated()
+                        .requestMatchers("/api/coach/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin())) // For H2 console

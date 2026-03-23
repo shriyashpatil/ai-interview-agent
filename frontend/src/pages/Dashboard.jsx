@@ -7,8 +7,13 @@ import {
   BarChart3,
   ArrowRight,
   AlertCircle,
+  Map,
+  Bot,
+  Target,
+  TrendingUp,
+  CheckCircle,
 } from 'lucide-react';
-import { interviewAPI } from '../services/api';
+import { interviewAPI, roadmapAPI, profileAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function Dashboard() {
@@ -18,6 +23,8 @@ export default function Dashboard() {
   const [error, setError] = useState('');
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [selectedInterviewType, setSelectedInterviewType] = useState(null);
+  const [roadmap, setRoadmap] = useState(null);
+  const [hasProfile, setHasProfile] = useState(false);
 
   const categories = [
     'SOFTWARE_ENGINEERING',
@@ -39,7 +46,23 @@ export default function Dashboard() {
 
   useEffect(() => {
     fetchSessions();
+    fetchRoadmapData();
   }, []);
+
+  const fetchRoadmapData = async () => {
+    try {
+      const profileRes = await profileAPI.get();
+      if (profileRes.data) {
+        setHasProfile(true);
+        if (profileRes.data.hasRoadmap) {
+          const roadmapRes = await roadmapAPI.getActive();
+          setRoadmap(roadmapRes.data);
+        }
+      }
+    } catch (err) {
+      // No profile or roadmap yet — that's fine
+    }
+  };
 
   const fetchSessions = async () => {
     setLoading(true);
@@ -95,8 +118,64 @@ export default function Dashboard() {
           </div>
         )}
 
+        {/* Roadmap Banner */}
+        {!hasProfile ? (
+          <div className="mb-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl p-6 text-white flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-bold mb-1 flex items-center space-x-2">
+                <Target size={20} />
+                <span>Create Your Career Roadmap</span>
+              </h2>
+              <p className="text-blue-100 text-sm">Tell us about your goals and get a personalised AI-powered roadmap with milestones and WhatsApp reminders.</p>
+            </div>
+            <Link
+              to="/onboarding"
+              className="flex-shrink-0 inline-flex items-center space-x-2 px-5 py-2.5 bg-white text-blue-600 rounded-lg font-bold hover:bg-blue-50 transition-colors"
+            >
+              <span>Get Started</span>
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+        ) : roadmap ? (
+          <div className="mb-8 bg-white rounded-xl shadow-md p-6 border border-gray-100">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-gray-900 flex items-center space-x-2">
+                <Map size={18} className="text-indigo-600" />
+                <span>Your Roadmap</span>
+              </h2>
+              <Link to="/roadmap" className="text-sm text-blue-600 hover:text-blue-700 font-semibold flex items-center space-x-1">
+                <span>View All</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+            <p className="text-gray-700 font-semibold mb-3">{roadmap.title}</p>
+            <div className="mb-3">
+              <div className="flex justify-between text-sm text-gray-600 mb-1">
+                <span>Progress</span>
+                <span className="font-bold text-blue-600">{roadmap.progressPercent}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                <div
+                  className="bg-blue-600 h-2.5 rounded-full transition-all duration-500"
+                  style={{ width: `${roadmap.progressPercent}%` }}
+                />
+              </div>
+            </div>
+            <div className="flex items-center space-x-4 text-sm text-gray-500">
+              <span className="flex items-center space-x-1">
+                <CheckCircle size={14} className="text-green-500" />
+                <span>{roadmap.milestones?.filter(m => m.status === 'COMPLETED').length || 0}/{roadmap.milestones?.length || 0} milestones</span>
+              </span>
+              <span className="flex items-center space-x-1">
+                <TrendingUp size={14} className="text-blue-500" />
+                <span>Target: {roadmap.targetDate ? new Date(roadmap.targetDate).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' }) : '—'}</span>
+              </span>
+            </div>
+          </div>
+        ) : null}
+
         {/* Quick Actions */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <button
             onClick={() => handleStartInterview('MOCK_INTERVIEW')}
             className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left group"
@@ -150,6 +229,34 @@ export default function Dashboard() {
             </p>
             <div className="flex items-center text-blue-600 text-sm font-semibold">
               Analyze <ArrowRight size={16} className="ml-2" />
+            </div>
+          </Link>
+
+          <Link
+            to="/roadmap"
+            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left group"
+          >
+            <Map className="text-indigo-600 mb-4 group-hover:scale-110 transition-transform" size={32} />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">My Roadmap</h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Track your career milestones and progress.
+            </p>
+            <div className="flex items-center text-blue-600 text-sm font-semibold">
+              View <ArrowRight size={16} className="ml-2" />
+            </div>
+          </Link>
+
+          <Link
+            to="/coach"
+            className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left group"
+          >
+            <Bot className="text-purple-600 mb-4 group-hover:scale-110 transition-transform" size={32} />
+            <h3 className="text-lg font-semibold text-gray-900 mb-2">AI Coach</h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Get personalised career coaching and advice.
+            </p>
+            <div className="flex items-center text-blue-600 text-sm font-semibold">
+              Chat <ArrowRight size={16} className="ml-2" />
             </div>
           </Link>
         </div>

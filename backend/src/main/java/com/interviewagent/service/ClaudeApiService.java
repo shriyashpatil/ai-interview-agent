@@ -90,6 +90,45 @@ public class ClaudeApiService {
     }
 
     /**
+     * Simple single-turn generation (used for roadmap generation, coach responses, etc.)
+     */
+    public String generateResponse(String prompt) {
+        try {
+            ObjectNode requestBody = objectMapper.createObjectNode();
+            requestBody.put("model", model);
+            requestBody.put("max_tokens", 4096);
+
+            ArrayNode messages = requestBody.putArray("messages");
+            ObjectNode userMsg = messages.addObject();
+            userMsg.put("role", "user");
+            userMsg.put("content", prompt);
+
+            String response = webClient.post()
+                    .uri("/messages")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .bodyValue(requestBody.toString())
+                    .exchangeToMono(clientResponse -> {
+                        if (clientResponse.statusCode().isError()) {
+                            return clientResponse.bodyToMono(String.class)
+                                    .flatMap(errorBody -> {
+                                        log.error("Claude API error - Status: {}, Body: {}", clientResponse.statusCode(), errorBody);
+                                        return Mono.error(new RuntimeException("Claude API error: " + errorBody));
+                                    });
+                        }
+                        return clientResponse.bodyToMono(String.class);
+                    })
+                    .block();
+
+            JsonNode responseJson = objectMapper.readTree(response);
+            return responseJson.path("content").get(0).path("text").asText();
+
+        } catch (Exception e) {
+            log.error("Error calling Claude API generateResponse: {}", e.getMessage(), e);
+            throw new RuntimeException("Failed to generate response: " + e.getMessage(), e);
+        }
+    }
+
+    /**
      * Analyze a resume using Claude.
      */
     public String analyzeResume(String resumeText) {

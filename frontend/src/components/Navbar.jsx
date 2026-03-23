@@ -20,7 +20,8 @@ export default function Navbar() {
   const navLinks = isAuthenticated
     ? [
         { path: '/dashboard', label: 'Dashboard' },
-        { path: '/interview/:id', label: 'Interview' },
+        { path: '/roadmap', label: 'Roadmap' },
+        { path: '/coach', label: 'Coach' },
         { path: '/questions', label: 'Questions' },
         { path: '/resume', label: 'Resume' },
         { path: '/progress', label: 'Progress' },
@@ -36,7 +37,7 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center">
-            <span className="text-2xl font-bold text-blue-600">AI Interview</span>
+            <span className="text-2xl font-bold text-blue-600">CareerCoach AI</span>
           </Link>
 
           {/* Desktop Navigation */}
