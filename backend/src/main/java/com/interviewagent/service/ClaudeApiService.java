@@ -33,7 +33,7 @@ public class ClaudeApiService {
         this.webClient = WebClient.builder()
                 .baseUrl(baseUrl)
                 .defaultHeader("x-api-key", apiKey)
-                .defaultHeader("anthropic-version", "2024-10-22")
+                .defaultHeader("anthropic-version", "2023-06-01")
                 .defaultHeader("Content-Type", "application/json")
                 .build();
     }
